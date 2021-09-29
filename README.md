@@ -1,121 +1,70 @@
-# 📋 Sobre a atividade
+# Getting Started with Create React App
 
-O objetivo desta atividade é criar um estado global para armazenar um nome. Vamos entender como fazer a mudança desse estado global, usando o **useDispatch** e a **action** criada.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Então mostraremos para o usuário o resultado em tela.
+## Available Scripts
 
-# ℹ️ Informações úteis
+In the project directory, you can run:
 
-## Resultado final
+### `yarn start`
 
-![](https://media2.giphy.com/media/toOt2Ik7Y7rhc2xP7h/giphy.gif?cid=790b76115846dd34878a3b24035b948581d184cb0916416b&rid=giphy.gif&ct=g)
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Mão na massa!
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-Vamos instalar as dependências no projeto:
+### `yarn test`
 
-    yarn add redux react-redux
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-Vamos estruturar as pastas do redux, com um módulo chamado **user**, a estrutura fica assim:
+### `yarn build`
 
-![](https://i.ibb.co/T4StMv3/Captura-de-tela-de-2021-07-19-13-19-36.png)
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Tendo a estruturação de pastas feita. Primeiro vamos construir o nosso **reducer.js**:
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-    const initialState = {name: ""};
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-    const userReducer = (state = initialState, action) => {
-    	switch (action.type) {
-    	  case "CHANGE_NAME":
-    	    const { name } = action;
-          return {name: name};
+### `yarn eject`
 
-        default:
-          return state;
-      }
-    }
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-    export default userReducer;
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Ok, vamos olhar linha por linha para entender o que está acontecendo.
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-1.  O primeiro parâmetro que nosso reducer recebe é o **state inicial**, aqui declaramos um objeto, mas pode ser qualquer outro tipo de dado. Em seguida ele receberá a **action**, que será um objeto, veremos melhor sobre ela a seguir.
-2.  Usamos o switch para analisar o **type** da nossa **action**.
-3.  Se o **type** for igual a **"CHANGE_NAME"**, executaremos o que está dentro deste case.
-4.  Criamos uma variável chamada **name** a partir do **action.name** que recebemos. Vamos supor que no **action.name** recebemos o valor **"Kenzie"**.
-5.  Quando damos o **return** dentro do **reducer**, o valor retornado se tornará o **state atualizado**.
-6.  Caso não tenha um **type**, retorná o **valor default**, ou seja, o **valor atual** do **state**.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-Agora vamos criar a **action**:
+## Learn More
 
-    export const changeName = (name) => ({
-      type: "CHANGE_NAME",
-      name: name
-    })
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-Repare que quando chamarmos nossa ação passaremos um **name** como parâmetro.
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-Agora para que tudo funcione devemos configurar o **index.js** da **store**:
+### Code Splitting
 
-    import { createStore, combineReducers } from "redux";
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-    import userReducer from "./modules/user/reducers";
+### Analyzing the Bundle Size
 
-    const reducers = combineReducers({ user: userReducer });
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-    const store = createStore(reducers);
+### Making a Progressive Web App
 
-    export default store;
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-Usamos o **combineReducers** para possibilitar o uso de outros reducers junto.
+### Advanced Configuration
 
-E por fim, temos que adicionar a store ao React. Para isso colocaremos assim no **index.js** na pasta **src.**
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-    import React from "react";
-    import ReactDOM from "react-dom";
-    import App from "./App";
+### Deployment
 
-    import { Provider } from "react-redux";
-    import store from "./store";
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-    ReactDOM.render(
-      <React.StrictMode>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </React.StrictMode>,
-      document.getElementById("root")
-    );
+### `yarn build` fails to minify
 
-Pronto, o redux está funcionando, vamos criar um componente **UserCard**:
-
-    import { useDispatch } from "react-redux";
-    import { changeName } from "../../store/modules/user/actions";
-
-    const UserCard = () => {
-      const dispatch = useDispatch();
-
-      const handleClick = () => {
-        dispatch(changeName(newName));
-      }
-
-      return (
-        <div>
-          <input type="text"/>
-          <button>Change</button>
-        </div>
-      )
-    }
-
-    export default UserCard;
-
-O componente não está completo, você precisa completa-lo para obter o resultado esperado.
-
-Explicando o **handleClick**. É o momento que mudamos o valor do **state** na **store**:
-
-1.  Vamos passar o **dispatch**, com uma **action** de parâmetro.
-2.  Essa é **action changeName** que tinhamos criado anteriormente. Lembre que ela recebe um parâmetro, esse será o novo valor que enviaremos para o state.
-
-# 💡Conhecimentos aplicados:
-
-*   useDispatch
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
